@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "raw_image_hashes_checked": 4093,
+  "prediction_rows": 8186,
+  "device": "cuda",
+  "torch": "2.7.1+cu128",
+  "numerical_settings": {
+    "protocol": "fresh_views_v1",
+    "deterministic_algorithms": true,
+    "cudnn_deterministic": true,
+    "cudnn_benchmark": false,
+    "matmul_tf32": false,
+    "cudnn_tf32": false
+  },
+  "top1_mismatches": 0,
+  "max_probability_delta": 0.00018411874771118164
+}

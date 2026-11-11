@@ -1,0 +1,37 @@
+{
+  "protocol": "fresh_views_v1",
+  "seeds": [
+    664,
+    665,
+    666
+  ],
+  "conditions": [
+    "ordinary",
+    "strong"
+  ],
+  "epochs": 8,
+  "batch_size": 96,
+  "input_size": 128,
+  "initialization": "ImageNet MobileNetV3-Small; identical within seed",
+  "trainable": "last inverted residual block, final convolution, classifier",
+  "optimizer": "AdamW",
+  "learning_rate": 0.0005,
+  "weight_decay": 0.0001,
+  "fresh_view": "independent per-image local Python RNG each epoch; PIL transforms",
+  "random_seed_formula": "seed*1000000000 + epoch*100000 + image_index",
+  "ordinary": "PIL resize 128, p=0.5 horizontal flip, ImageNet normalization",
+  "strong": "same plus crop area .55-1, log-uniform ratio .8-1.25 and jitter .35/.35/.35/.07",
+  "prefix": "eval mode, frozen weights, fresh forward pass each batch; float16 activations then float32 trainable blocks",
+  "checkpoint_selection": "first maximum eight-supported-class source-validation macro-F1",
+  "split_selection": "original fixed split; no seed-based resplitting",
+  "external_evaluation": "only after all six checkpoints finalized; no field-based selection",
+  "manifest_sha256": "2e53a11bee4c9e5cfb02f17ca2da14526410e454eba3dacd1c778a0750b05f59",
+  "script_sha256": "6bf570d954fc72e9d476e87dddd11bb41fce1d4904117612e04b3007f9a13b81",
+  "torch": "2.7.1+cu128",
+  "torchvision": "0.22.1+cu128",
+  "python": "3.12.14",
+  "hardware": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+  "device": "cuda",
+  "deterministic_algorithms": true,
+  "tf32": false
+}

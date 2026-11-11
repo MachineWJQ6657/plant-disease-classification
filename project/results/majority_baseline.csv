@@ -1,0 +1,3 @@
+method,class_index,category,split,n,accuracy,macro_f1
+source_training_majority,5,Yellow leaf curl,pv_test,3351,0.3282602208296031,0.054918994483137376
+source_training_majority,5,Yellow leaf curl,pd_test,742,0.10107816711590296,0.02039983680130559

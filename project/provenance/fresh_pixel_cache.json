@@ -1,0 +1,30 @@
+[
+  {
+    "cache_descriptor": "pd_test-6aa09bf5724c2c15.json",
+    "descriptor_sha256": "6aa09bf5724c2c15d649f91945397802db5fa21b875b14c596e034177fdfaf45",
+    "images": 742,
+    "raw_sha256_verified": true,
+    "created_utc": "2026-11-11T01:39:58.459822+00:00"
+  },
+  {
+    "cache_descriptor": "pv_test-699ee0239847e02e.json",
+    "descriptor_sha256": "699ee0239847e02e2f9325a74fd7c7429e61d1dc6a0804ca44091b5a32924d46",
+    "images": 3351,
+    "raw_sha256_verified": true,
+    "created_utc": "2026-11-11T01:39:54.445430+00:00"
+  },
+  {
+    "cache_descriptor": "pv_train-9060e102e08163b0.json",
+    "descriptor_sha256": "9060e102e08163b00d2bbbb37025055a1fad2962cd83cdfd17155be9a3c0f7f0",
+    "images": 12036,
+    "raw_sha256_verified": true,
+    "created_utc": "2026-11-11T01:32:52.806021+00:00"
+  },
+  {
+    "cache_descriptor": "pv_val-0b85f5321d76c55c.json",
+    "descriptor_sha256": "0b85f5321d76c55c5329c7a7867fdc556d49b0b543695a1290be0dc99dbdeafb",
+    "images": 1364,
+    "raw_sha256_verified": true,
+    "created_utc": "2026-11-11T01:32:53.455689+00:00"
+  }
+]

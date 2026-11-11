@@ -1,0 +1,37 @@
+condition,split,category,true_count,predicted_count
+ordinary,pd_test,Healthy,63,1
+ordinary,pd_test,Early blight,88,192
+ordinary,pd_test,Bacterial spot,109,0
+ordinary,pd_test,Late blight,111,506
+ordinary,pd_test,Mosaic virus,54,0
+ordinary,pd_test,Yellow leaf curl,75,6
+ordinary,pd_test,Leaf mold,91,4
+ordinary,pd_test,Septoria,149,33
+ordinary,pd_test,Spider mites,2,0
+ordinary,pv_test,Healthy,330,332
+ordinary,pv_test,Early blight,215,191
+ordinary,pv_test,Bacterial spot,436,442
+ordinary,pv_test,Late blight,375,400
+ordinary,pv_test,Mosaic virus,66,64
+ordinary,pv_test,Yellow leaf curl,1100,1084
+ordinary,pv_test,Leaf mold,172,170
+ordinary,pv_test,Septoria,337,343
+ordinary,pv_test,Spider mites,320,325
+strong,pd_test,Healthy,63,7
+strong,pd_test,Early blight,88,95
+strong,pd_test,Bacterial spot,109,0
+strong,pd_test,Late blight,111,585
+strong,pd_test,Mosaic virus,54,0
+strong,pd_test,Yellow leaf curl,75,4
+strong,pd_test,Leaf mold,91,7
+strong,pd_test,Septoria,149,44
+strong,pd_test,Spider mites,2,0
+strong,pv_test,Healthy,330,333
+strong,pv_test,Early blight,215,202
+strong,pv_test,Bacterial spot,436,422
+strong,pv_test,Late blight,375,379
+strong,pv_test,Mosaic virus,66,70
+strong,pv_test,Yellow leaf curl,1100,1092
+strong,pv_test,Leaf mold,172,158
+strong,pv_test,Septoria,337,366
+strong,pv_test,Spider mites,320,329

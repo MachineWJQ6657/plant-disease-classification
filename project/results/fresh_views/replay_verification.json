@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "verified_at_utc": "2026-11-11T01:54:19.060952+00:00",
+  "unique_raw_test_images": 4093,
+  "independently_replayed_predictions": 24558,
+  "top1_mismatches": 0,
+  "max_probability_delta": 0.00031128525733947754,
+  "per_seed": [
+    {
+      "seed": 664,
+      "status": "PASS",
+      "raw_image_hashes_checked": 4093,
+      "prediction_rows": 8186,
+      "device": "cuda",
+      "torch": "2.7.1+cu128",
+      "numerical_settings": {
+        "protocol": "fresh_views_v1",
+        "deterministic_algorithms": true,
+        "cudnn_deterministic": true,
+        "cudnn_benchmark": false,
+        "matmul_tf32": false,
+        "cudnn_tf32": false
+      },
+      "top1_mismatches": 0,
+      "max_probability_delta": 0.00030857324600219727
+    },
+    {
+      "seed": 665,
+      "status": "PASS",
+      "raw_image_hashes_checked": 4093,
+      "prediction_rows": 8186,
+      "device": "cuda",
+      "torch": "2.7.1+cu128",
+      "numerical_settings": {
+        "protocol": "fresh_views_v1",
+        "deterministic_algorithms": true,
+        "cudnn_deterministic": true,
+        "cudnn_benchmark": false,
+        "matmul_tf32": false,
+        "cudnn_tf32": false
+      },
+      "top1_mismatches": 0,
+      "max_probability_delta": 0.00031128525733947754
+    },
+    {
+      "seed": 666,
+      "status": "PASS",
+      "raw_image_hashes_checked": 4093,
+      "prediction_rows": 8186,
+      "device": "cuda",
+      "torch": "2.7.1+cu128",
+      "numerical_settings": {
+        "protocol": "fresh_views_v1",
+        "deterministic_algorithms": true,
+        "cudnn_deterministic": true,
+        "cudnn_benchmark": false,
+        "matmul_tf32": false,
+        "cudnn_tf32": false
+      },
+      "top1_mismatches": 0,
+      "max_probability_delta": 0.00018411874771118164
+    }
+  ],
+  "method": "Independent raw-file decode and checkpoint replay with recorded deterministic and TF32 settings restored."
+}

@@ -1,0 +1,4 @@
+# Preserve experiment artifacts and SHA256 bytes on every platform.
+* -text
+*.sh text eol=lf
+*.sbatch text eol=lf

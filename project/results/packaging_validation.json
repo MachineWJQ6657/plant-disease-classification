@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "updated_utc": "2026-11-11T02:10:06.935505+00:00",
+  "unix_scripts": [
+    "project/run_demo.sh",
+    "project/report/build_report.sh",
+    "project/train_longleaf.sbatch"
+  ],
+  "all_unix_scripts_use_lf": true,
+  "bash_checks": [
+    {
+      "script": "outputs/Tomato_Project/project/run_demo.sh",
+      "status": "PASS",
+      "check": "Actual Git Bash execution"
+    },
+    {
+      "script": "outputs/Tomato_Project/project/report/build_report.sh",
+      "status": "PASS",
+      "check": "Actual Git Bash execution"
+    },
+    {
+      "script": "outputs/Tomato_Project/project/train_longleaf.sbatch",
+      "status": "PASS",
+      "check": "Bash syntax check only; no job submitted"
+    }
+  ],
+  "git_line_ending_rules": "project/.gitattributes",
+  "author_placeholder": "Author Name(s)",
+  "report_pages": 7,
+  "zip_unix_script_permissions": "0755"
+}

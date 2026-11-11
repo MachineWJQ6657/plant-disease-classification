@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+data/
+rerun/
+replay/
+*.part
+*.aux
+*.log
+*.out
+report/main.pdf
+tomato-*.log
+
+.build/

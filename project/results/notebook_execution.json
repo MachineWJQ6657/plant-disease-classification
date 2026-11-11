@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "cells": 33,
+  "executed_code_cells": 18,
+  "inline_figures": 4,
+  "errors": 0,
+  "seconds": 10.38,
+  "downloads_enabled": false,
+  "retraining_enabled": false,
+  "full_raw_replay_enabled": false,
+  "note": "All default notebook cells executed; outputs saved; existing checkpoints used, with no retraining or raw-image replay in this execution."
+}

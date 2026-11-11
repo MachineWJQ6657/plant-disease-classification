@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "torch": "2.7.1+cu128",
+  "checkpoints": [
+    {
+      "seed": 664,
+      "condition": "ordinary",
+      "epoch": 8,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.6013895273208618,
+      "total_parameters": 1527081
+    },
+    {
+      "seed": 664,
+      "condition": "strong",
+      "epoch": 8,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.7433843612670898,
+      "total_parameters": 1527081
+    },
+    {
+      "seed": 665,
+      "condition": "ordinary",
+      "epoch": 8,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.6214656829833984,
+      "total_parameters": 1527081
+    },
+    {
+      "seed": 665,
+      "condition": "strong",
+      "epoch": 8,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.765769124031067,
+      "total_parameters": 1527081
+    },
+    {
+      "seed": 666,
+      "condition": "ordinary",
+      "epoch": 6,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.4751828908920288,
+      "total_parameters": 1527081
+    },
+    {
+      "seed": 666,
+      "condition": "strong",
+      "epoch": 5,
+      "reconstructed_initial_state_matches": true,
+      "frozen_prefix_matches_imagenet": true,
+      "classifier_weight_l2_change": 1.4961373805999756,
+      "total_parameters": 1527081
+    }
+  ],
+  "note": "Independently reconstructed each seed initialization under the training library version; all selected classifier weights changed and every frozen prefix exactly matches ImageNet."
+}

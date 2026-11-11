@@ -1,0 +1,9 @@
+# Fresh-view three-seed experiment environment; install a matched torch build first.
+# Verified GPU build: torch==2.7.1+cu128, torchvision==0.22.1+cu128.
+torch==2.7.1
+torchvision==0.22.1
+numpy==2.3.5
+pandas==2.2.3
+scikit-learn==1.8.0
+Pillow==13.0.0
+matplotlib==3.10.8

@@ -1,0 +1,20 @@
+{
+  "initial_unconfigured_seed_664_replay": {
+    "status": "REVIEW",
+    "raw_image_hashes_checked": 4093,
+    "prediction_rows": 8186,
+    "device": "cuda",
+    "torch": "2.7.1+cu128",
+    "top1_mismatches": 4,
+    "max_probability_delta": 0.024965107440948486
+  },
+  "old_replayer_sha256": "ea2da7be765c09d9ccda222d2705df15d570bf357fe7c48abae89e5984437dbb",
+  "corrected_replayer_sha256": "421fcbeed962e9f80570b3fecbf8a8420ff1d4c7a335a4286b2fce263cc26d96",
+  "change": "Replayer now restores the fresh checkpoint protocol: deterministic algorithms, deterministic cuDNN, benchmark=False and both TF32 flags=False.",
+  "corrected_all_seed_replay": {
+    "status": "PASS",
+    "top1_mismatches": 0,
+    "max_probability_delta": 0.00031128525733947754
+  },
+  "interpretation": "Numerical-setting changes can affect near-boundary predictions. Training weights and saved primary metrics were not altered to resolve the mismatch."
+}

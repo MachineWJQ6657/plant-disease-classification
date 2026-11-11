@@ -1,0 +1,12 @@
+{
+  "seed": 666,
+  "condition": "ordinary",
+  "epochs": 8,
+  "optimizer_steps": 1008,
+  "image_presentations": 96288,
+  "initial_state_sha256": "ebc735cc10fcbf35d2cadd7488c2816035946f63f66f0fcc667c26e62a3d4ad1",
+  "final_state_sha256": "e563511bbe8da501db66e6073ef75f3e98d80556453b337639345ce5cab710b0",
+  "frozen_prefix_unchanged": true,
+  "training_seconds": 47.454,
+  "completed_utc": "2026-11-11T01:38:23.941807+00:00"
+}

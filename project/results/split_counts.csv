@@ -1,0 +1,10 @@
+category,pd_test,pv_test,pv_train,pv_val
+Bacterial spot,109,436,1439,252
+Early blight,88,215,669,116
+Healthy,63,330,1143,116
+Late blight,111,375,1419,112
+Leaf mold,91,172,664,116
+Mosaic virus,54,66,307,0
+Septoria,149,337,1310,124
+Spider mites,2,320,1152,204
+Yellow leaf curl,75,1100,3933,324

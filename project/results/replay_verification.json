@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "raw_image_hashes_checked": 4093,
+  "prediction_rows": 8186,
+  "device": "cpu",
+  "torch": "2.5.1+cpu",
+  "top1_mismatches": 0,
+  "max_probability_delta": 0.00025922060012817383
+}

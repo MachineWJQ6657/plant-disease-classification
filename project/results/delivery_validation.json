@@ -1,0 +1,48 @@
+{
+  "validation_date": "2026-11-10",
+  "generated_utc": "2026-11-11T01:59:46.891885+00:00",
+  "status": "PASS",
+  "report_pages": 7,
+  "presentation_slides": 12,
+  "presentation_native_tables": 5,
+  "presentation_notes": 12,
+  "notebook_cells": 37,
+  "notebook_executed_code_cells": 21,
+  "notebook_errors": 0,
+  "integrity_tests_passed": 10,
+  "latex_overfull_boxes": 0,
+  "latex_undefined_references": 0,
+  "fresh_training": {
+    "trained_models": 6,
+    "seeds": [
+      664,
+      665,
+      666
+    ],
+    "epochs_per_model": 8,
+    "total_epochs": 48,
+    "optimizer_steps": 6048,
+    "total_image_presentations": 577728,
+    "views_resampled_each_epoch": true,
+    "independent_raw_replay_predictions": 24558,
+    "raw_replay_top1_mismatches": 0,
+    "raw_replay_max_probability_delta": 0.00031128525733947754,
+    "initialization_and_frozen_prefix_audit": "PASS"
+  },
+  "legacy": {
+    "artifacts_preserved_byte_for_byte": true,
+    "original_training_history_independently_repeated": false,
+    "raw_test_replayed_predictions": 8186,
+    "raw_replay_top1_mismatches": 0
+  },
+  "longleaf_job_submitted": false,
+  "raw_datasets_bundled": false,
+  "scope": "Six fresh-view models independently trained and replayed; original supplied experiment retained separately. Notebook default execution recomputes results without retraining.",
+  "packaging_fix": {
+    "unix_lf": true,
+    "bash_demo_execution": "PASS",
+    "bash_report_build": "PASS",
+    "slurm_bash_syntax": "PASS",
+    "author_placeholder": "Author Name(s)"
+  }
+}

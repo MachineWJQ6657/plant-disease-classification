@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "cells": 37,
+  "executed_code_cells": 21,
+  "inline_figures": 4,
+  "errors": 0,
+  "seconds": 9.64,
+  "mode": "Fresh three-seed recomputation, independent replay receipt checks and real seed-664 inference",
+  "training_executed_by_default": false,
+  "new_training_already_completed_models": 6
+}

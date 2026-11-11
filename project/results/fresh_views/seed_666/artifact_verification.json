@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "manifest_images": 17493,
+  "prediction_rows": 8186,
+  "split_counts": {
+    "pd_test": 742,
+    "pv_test": 3351,
+    "pv_val": 1364,
+    "pv_train": 12036
+  },
+  "documented_leaf_groups": 2854,
+  "selected_epochs": {
+    "ordinary": 6,
+    "strong": 5
+  },
+  "metrics": [
+    {
+      "condition": "ordinary",
+      "split": "pd_test",
+      "n": 742,
+      "correct": 143,
+      "accuracy": 0.192722371967655,
+      "macro_f1": 0.08023400503343298
+    },
+    {
+      "condition": "ordinary",
+      "split": "pv_test",
+      "n": 3351,
+      "correct": 3263,
+      "accuracy": 0.9737391823336318,
+      "macro_f1": 0.9646769211792751
+    },
+    {
+      "condition": "strong",
+      "split": "pd_test",
+      "n": 742,
+      "correct": 152,
+      "accuracy": 0.20485175202156333,
+      "macro_f1": 0.09817853793083438
+    },
+    {
+      "condition": "strong",
+      "split": "pv_test",
+      "n": 3351,
+      "correct": 3235,
+      "accuracy": 0.9653834676216055,
+      "macro_f1": 0.95773499125587
+    }
+  ],
+  "scope": "Saved-artifact integrity and independently recomputed metrics; raw-image replay is a separate check."
+}

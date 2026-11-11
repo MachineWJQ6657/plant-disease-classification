@@ -1,0 +1,21 @@
+{
+  "provenance": "Reconstructed from supplied code and verified checkpoint metadata; not a new training log",
+  "seed": 664,
+  "backbone": "MobileNetV3-Small",
+  "weights": "IMAGENET1K_V1",
+  "input_size": 128,
+  "batch_size": 96,
+  "epochs": 8,
+  "cached_views": 2,
+  "optimizer": "AdamW",
+  "learning_rate": 0.0005,
+  "weight_decay": 0.0001,
+  "total_parameters": 1527081,
+  "trainable_parameters": 950617,
+  "validation_supported_classes": 8,
+  "test_classes": 9,
+  "train_size": 12036,
+  "validation_size": 1364,
+  "pv_test_size": 3351,
+  "pd_test_size": 742
+}

@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "note": "Exact official ImageNet prefix comparison verifies the frozen-prefix claim; no retraining is implied.",
+  "checkpoints": [
+    {
+      "condition": "ordinary",
+      "selected_epoch": 6,
+      "history_best_epoch": 6,
+      "total_parameters": 1527081,
+      "trainable_parameters": 950617,
+      "class_order_matches": true,
+      "input_size": 128,
+      "prefix_exactly_matches_official_imagenet": true
+    },
+    {
+      "condition": "strong",
+      "selected_epoch": 4,
+      "history_best_epoch": 4,
+      "total_parameters": 1527081,
+      "trainable_parameters": 950617,
+      "class_order_matches": true,
+      "input_size": 128,
+      "prefix_exactly_matches_official_imagenet": true
+    }
+  ]
+}

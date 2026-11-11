@@ -1,0 +1,37 @@
+condition,split,category,support,recall,f1
+ordinary,pd_test,Healthy,63,0.015873015873015872,0.03076923076923077
+ordinary,pd_test,Early blight,88,0.5,0.2674772036474164
+ordinary,pd_test,Bacterial spot,109,0.0,0.0
+ordinary,pd_test,Late blight,111,0.8018018018018018,0.3095652173913043
+ordinary,pd_test,Mosaic virus,54,0.0,0.0
+ordinary,pd_test,Yellow leaf curl,75,0.013333333333333334,0.023255813953488372
+ordinary,pd_test,Leaf mold,91,0.01098901098901099,0.020833333333333332
+ordinary,pd_test,Septoria,149,0.06040268456375839,0.10714285714285714
+ordinary,pd_test,Spider mites,2,0.0,0.0
+ordinary,pv_test,Healthy,330,1.0,0.9969788519637462
+ordinary,pv_test,Early blight,215,0.9116279069767442,0.8909090909090909
+ordinary,pv_test,Bacterial spot,436,0.9724770642201835,0.9814814814814815
+ordinary,pv_test,Late blight,375,0.9653333333333334,0.9526315789473684
+ordinary,pv_test,Mosaic virus,66,0.9848484848484849,0.9701492537313433
+ordinary,pv_test,Yellow leaf curl,1100,0.9954545454545455,0.9950022716946842
+ordinary,pv_test,Leaf mold,172,0.9767441860465116,0.9545454545454546
+ordinary,pv_test,Septoria,337,0.9228486646884273,0.9539877300613497
+ordinary,pv_test,Spider mites,320,0.971875,0.9764521193092621
+strong,pd_test,Healthy,63,0.015873015873015872,0.02857142857142857
+strong,pd_test,Early blight,88,0.10227272727272728,0.14516129032258066
+strong,pd_test,Bacterial spot,109,0.009174311926605505,0.017699115044247787
+strong,pd_test,Late blight,111,0.8918918918918919,0.28245363766048504
+strong,pd_test,Mosaic virus,54,0.0,0.0
+strong,pd_test,Yellow leaf curl,75,0.0,0.0
+strong,pd_test,Leaf mold,91,0.0,0.0
+strong,pd_test,Septoria,149,0.2214765100671141,0.2796610169491525
+strong,pd_test,Spider mites,2,0.0,0.0
+strong,pv_test,Healthy,330,1.0,0.9984871406959153
+strong,pv_test,Early blight,215,0.8604651162790697,0.9046454767726161
+strong,pv_test,Bacterial spot,436,0.9724770642201835,0.9814814814814815
+strong,pv_test,Late blight,375,0.984,0.9697766097240473
+strong,pv_test,Mosaic virus,66,1.0,0.9361702127659575
+strong,pv_test,Yellow leaf curl,1100,0.9836363636363636,0.9885792599360439
+strong,pv_test,Leaf mold,172,0.9418604651162791,0.9585798816568047
+strong,pv_test,Septoria,337,0.9792284866468842,0.9606986899563319
+strong,pv_test,Spider mites,320,0.975,0.9570552147239264

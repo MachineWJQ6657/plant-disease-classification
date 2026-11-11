@@ -1,0 +1,175 @@
+{
+  "overall": [
+    [
+      "Clean accuracy",
+      "97.26 \u00b1 0.16",
+      "96.66 \u00b1 0.58"
+    ],
+    [
+      "Field accuracy",
+      "18.78 \u00b1 1.10",
+      "20.13 \u00b1 0.74"
+    ],
+    [
+      "Clean macro-F1",
+      "96.32 \u00b1 0.18",
+      "95.71 \u00b1 0.50"
+    ],
+    [
+      "Field macro-F1",
+      "7.76 \u00b1 0.83",
+      "9.16 \u00b1 0.73"
+    ]
+  ],
+  "seeds": [
+    [
+      "664",
+      "Ordinary",
+      "8",
+      "19.54",
+      "8.43"
+    ],
+    [
+      "664",
+      "Crop + color",
+      "8",
+      "19.27",
+      "8.37"
+    ],
+    [
+      "665",
+      "Ordinary",
+      "8",
+      "17.52",
+      "6.83"
+    ],
+    [
+      "665",
+      "Crop + color",
+      "8",
+      "20.62",
+      "9.30"
+    ],
+    [
+      "666",
+      "Ordinary",
+      "6",
+      "19.27",
+      "8.02"
+    ],
+    [
+      "666",
+      "Crop + color",
+      "5",
+      "20.49",
+      "9.82"
+    ]
+  ],
+  "paired": [
+    [
+      "664",
+      "-0.27",
+      "-0.06"
+    ],
+    [
+      "665",
+      "+3.10",
+      "+2.47"
+    ],
+    [
+      "666",
+      "+1.21",
+      "+1.79"
+    ],
+    [
+      "Mean \u00b1 SD",
+      "+1.35 \u00b1 1.69",
+      "+1.40 \u00b1 1.31"
+    ]
+  ],
+  "recall": [
+    [
+      "Healthy",
+      "63",
+      "0.5",
+      "0.5",
+      "+0.0"
+    ],
+    [
+      "Early blight",
+      "88",
+      "34.8",
+      "26.5",
+      "-8.3"
+    ],
+    [
+      "Bacterial spot",
+      "109",
+      "0.0",
+      "0.6",
+      "+0.6"
+    ],
+    [
+      "Late blight",
+      "111",
+      "85.9",
+      "86.5",
+      "+0.6"
+    ],
+    [
+      "Mosaic virus",
+      "54",
+      "0.0",
+      "0.0",
+      "+0.0"
+    ],
+    [
+      "Yellow leaf curl",
+      "75",
+      "1.3",
+      "1.3",
+      "+0.0"
+    ],
+    [
+      "Leaf mold",
+      "91",
+      "0.7",
+      "0.7",
+      "+0.0"
+    ],
+    [
+      "Septoria",
+      "149",
+      "7.6",
+      "18.3",
+      "+10.7"
+    ],
+    [
+      "Spider mites",
+      "2",
+      "0.0",
+      "0.0",
+      "+0.0"
+    ]
+  ],
+  "examples": [
+    {
+      "filename": "field.jpg",
+      "ordinary": "Late blight",
+      "strong": "Late blight"
+    },
+    {
+      "filename": "field_second.jpg",
+      "ordinary": "Early blight",
+      "strong": "Late blight"
+    }
+  ],
+  "interpretation": {
+    "conclusion": "Strong augmentation improved both field metrics on average, but the paired improvements were not consistent across all three seeds.",
+    "field_error_summary": [
+      "Ordinary training most often predicted late blight, assigning that label to 540.0 of 742 field images on average (SD 85.8); its true support was 111.",
+      "Strong training most often predicted late blight, assigning that label to 543.7 of 742 field images on average (SD 56.3); its true support was 111.",
+      "The largest signed mean class-recall change was +10.7 pp for septoria, and the smallest was -8.3 pp for early blight."
+    ]
+  }
+}

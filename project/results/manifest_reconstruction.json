@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "source": "Pinned upstream downloads; portable filenames decoded to original paths",
+  "files": [
+    {
+      "file": "manifest.csv",
+      "identical": true,
+      "sha256": "2e53a11bee4c9e5cfb02f17ca2da14526410e454eba3dacd1c778a0750b05f59"
+    },
+    {
+      "file": "exclusions.csv",
+      "identical": true,
+      "sha256": "e942beaa2d8433ec8446113c2ccb3162fd171e169a843e6066a8facd03d4f5b2"
+    },
+    {
+      "file": "class_mapping.csv",
+      "identical": true,
+      "sha256": "293cf40bd47dbf0747825a871a25b6c45010f7c4cfee6de46a87456f913d698f"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "pv.zip": {
+    "bytes": 2516720132,
+    "sha256": "43dafa61573f658d5eee119502d69ff8eddec0faf1a40abe6e6b0f302879e3a0"
+  },
+  "pd.zip": {
+    "bytes": 984592720,
+    "sha256": "94e2b99a500a63efbd48923ed48588fbb01f9b1db66a2d3b5c24eed6466da20f"
+  },
+  "leaf-map.json": {
+    "bytes": 2429879,
+    "sha256": "3b4b253683c6911744959a3870a92509b1faa1ee34e9f8585e21d0fe6337a25b"
+  },
+  "color_train.txt": {
+    "bytes": 4151500,
+    "sha256": "c43e0205b321d1c929116f5df1842348ac1e5c4861306e081416785d3c439dbd"
+  },
+  "color_test.txt": {
+    "bytes": 1018650,
+    "sha256": "7a7257dcb5f9456feae6ae81248d29c28f45dc4cd41a00c13a5c5c198c5f2f8b"
+  }
+}
