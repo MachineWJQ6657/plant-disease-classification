@@ -1,5 +1,4 @@
-# Fresh-view three-seed experiment environment; install a matched torch build first.
-# Verified GPU build: torch==2.7.1+cu128, torchvision==0.22.1+cu128.
+# GPU training environment (used for the saved results): torch 2.7.1+cu128, torchvision 0.22.1+cu128.
 torch==2.7.1
 torchvision==0.22.1
 numpy==2.3.5

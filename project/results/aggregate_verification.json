@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "seeds": [
+    664,
+    665,
+    666
+  ],
+  "trained_models": 6,
+  "unique_completed_epochs": 48,
+  "optimizer_steps": 6048,
+  "total_image_presentations": 577728,
+  "identical_initialization_within_seed": true,
+  "identical_sample_order_within_seed": true,
+  "all_six_checkpoints_locked_before_test_predictions": true,
+  "original_split_preserved": true,
+  "all_per_seed_artifact_audits_passed": true,
+  "interpretation": "Mean and sample SD describe three fitted seeds on the same test images, not three independent test datasets."
+}

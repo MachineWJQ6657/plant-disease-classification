@@ -1,0 +1,10 @@
+true_label,Healthy,Early blight,Bacterial spot,Late blight,Mosaic virus,Yellow leaf curl,Leaf mold,Septoria,Spider mites
+Healthy,325,0,0,3,0,0,0,0,2
+Early blight,0,167,13,11,0,0,0,18,6
+Bacterial spot,0,4,423,0,0,1,0,6,2
+Late blight,0,4,2,364,0,0,2,3,0
+Mosaic virus,0,0,0,0,64,0,0,2,0
+Yellow leaf curl,0,0,11,2,0,1074,1,1,11
+Leaf mold,0,0,0,3,0,0,158,10,1
+Septoria,0,0,0,1,0,0,1,334,1
+Spider mites,0,0,0,0,0,0,0,7,313

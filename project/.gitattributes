@@ -1,3 +1,0 @@
-# Keep Unix entry points portable on Windows checkouts.
-*.sh text eol=lf
-*.sbatch text eol=lf

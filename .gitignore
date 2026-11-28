@@ -2,12 +2,11 @@
 __pycache__/
 .ipynb_checkpoints/
 .build/
-node_modules/
 data/
 rerun/
 replay/
+reconstructed/
 *.part
-*.pyc
 *.aux
 *.log
 *.out
