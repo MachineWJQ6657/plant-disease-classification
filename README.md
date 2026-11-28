@@ -56,7 +56,7 @@ python replay.py --data data --seed-dir results/seed_664
 
 ## Report
 
-Upload `report/` to Overleaf (New Project → Upload Project, compiler pdfLaTeX, main file `main.tex`) or run `pdflatex main.tex` twice. Team names go in `\TeamMembers` at the top of `main.tex`. All numbers come from `figures/numbers.tex` and the other generated tables; regenerate them with `project/figures.py` rather than editing them by hand.
+Upload `report/` to Overleaf (New Project → Upload Project, compiler pdfLaTeX, main file `main.tex`) or run `pdflatex main.tex` twice. All numbers come from `figures/numbers.tex` and the other generated tables; regenerate them with `project/figures.py` rather than editing them by hand.
 
 ## Provenance
 

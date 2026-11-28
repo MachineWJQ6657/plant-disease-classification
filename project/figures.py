@@ -107,14 +107,15 @@ def build(root, dest):
                                for seed in seeds for c in ['ordinary', 'strong']])
     write(dest / 'deltas.tex', [row([int(r.seed), f'{r.accuracy_delta_pp:+.2f}', f'{r.macro_f1_delta_pp:+.2f}'])
                                 for r in deltas[deltas.split == 'pd_test'].sort_values('seed').itertuples()])
-    recall = []
-    for name in NAMES:
-        values = [name, int(classes.loc[('ordinary', 'pd_test', name), 'support'])]
-        for c in ['ordinary', 'strong']:
-            clean, field = (100 * classes.loc[(c, s, name), 'recall_mean'] for s in ['pv_test', 'pd_test'])
-            values += [f'{clean:.1f}', f'{field:.1f}', f'{clean - field:.1f}']
-        recall.append(row(values))
-    write(dest / 'recall.tex', recall)
+    for metric in ['recall', 'f1']:  # per-class clean, field and clean-minus-field gap, mean over seeds
+        lines = []
+        for name in NAMES:
+            values = [name, int(classes.loc[('ordinary', 'pd_test', name), 'support'])]
+            for c in ['ordinary', 'strong']:
+                clean, field = (100 * classes.loc[(c, s, name), metric + '_mean'] for s in ['pv_test', 'pd_test'])
+                values += [f'{clean:.1f}', f'{field:.1f}', f'{clean - field:.1f}']
+            lines.append(row(values))
+        write(dest / f'{metric}.tex', lines)
     write(dest / 'confidence.tex', [row([r.seed, LABEL[r.condition], r.high_confidence_n, r.high_confidence_correct,
                                          f'{100 * r.high_confidence_accuracy:.2f}']) for r in confidence.itertuples()])
     write(dest / 'errors.tex', [' '.join(interpretation['field_error_summary'])])

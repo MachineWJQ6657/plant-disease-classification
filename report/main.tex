@@ -7,18 +7,18 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern,microtype,graphicx,booktabs,amsmath,array,caption}
 \usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
 \usepackage{fancyhdr}
 
 %% ---------------------------------------------------------------------
 %% EDIT HERE: team information (used on the title block only)
 %% ---------------------------------------------------------------------
-\newcommand{\TeamMembers}{Author Name(s)}   % e.g. First Last\quad First Last\quad ...
-\newcommand{\ReportDate}{Fall 2026}
+\newcommand{\TeamMembers}{Zheng Ni, Yuzhi Hu, Enci Zhang, Xinyi Xu} 
 %% ---------------------------------------------------------------------
 
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small COMP 664: Course Project, Fall 2026}
-\fancyhead[R]{\small Topic 2}
+\fancyhead[L]{\small COMP 664, Fall 2026}
+\fancyhead[R]{\small }
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
@@ -32,16 +32,16 @@
 \begin{document}
 \begin{center}
 {\Large\bfseries Plant Disease Classification Across\\Clean and Field Images}\par
-\vspace{.5em}\TeamMembers\quad\ReportDate
+\vspace{.5em}\TeamMembers
 \end{center}
 
 \begin{abstract}
-We ask how much a classifier trained on controlled tomato-leaf photographs loses on field images, and whether strong crop and color augmentation reduces that loss. We fine-tune an ImageNet-pretrained MobileNetV3-Small under two matched conditions, ordinary and strong augmentation, using three paired seeds and newly sampled image views in every epoch (six models in total). The official PlantVillage split and all training budgets are fixed, and checkpoint selection uses only PlantVillage validation. Ordinary training reaches $\OrdCleanAcc\pm\OrdCleanAccSD$\% clean accuracy and $\OrdFieldAcc\pm\OrdFieldAccSD$\% field accuracy. Strong augmentation reaches $\AugCleanAcc\pm\AugCleanAccSD$\% and $\AugFieldAcc\pm\AugFieldAccSD$\%, respectively (mean $\pm$ sample SD over seeds). The mean paired field changes are $\DeltaAcc$ percentage points in accuracy and $\DeltaFone$ in macro-F1. \Conclusion\ Absolute field performance remains low: a training-only majority-class classifier reaches \BaseFieldAcc\% field accuracy. An earlier single-seed pilot is summarized in Appendix~\ref{app:pilot}. Code, checkpoints, per-image predictions, audits, and an executed Notebook accompany the report.
+We ask how much a classifier trained on controlled tomato-leaf photographs loses on field images, and whether strong crop and color augmentation reduces that loss. We fine-tune an ImageNet-pretrained MobileNetV3-Small under two matched conditions, ordinary and strong augmentation, using three paired seeds and newly sampled image views in every epoch (six models in total). The official PlantVillage split and all training budgets are fixed, and checkpoint selection uses only PlantVillage validation. Ordinary training reaches $\OrdCleanAcc\pm\OrdCleanAccSD$\% clean accuracy and $\OrdFieldAcc\pm\OrdFieldAccSD$\% field accuracy. Strong augmentation reaches $\AugCleanAcc\pm\AugCleanAccSD$\% and $\AugFieldAcc\pm\AugFieldAccSD$\%, respectively (mean $\pm$ sample SD over seeds). The mean paired field changes are $\DeltaAcc$ percentage points in accuracy and $\DeltaFone$ in macro-F1. \Conclusion\ Absolute field performance remains low: a training-only majority-class classifier reaches \BaseFieldAcc\% field accuracy. An earlier single-seed pilot is summarized in Appendix~\ref{app:pilot}. Code, the processed file list, checkpoints, per-image predictions, audits, and an executed Notebook are available at \url{https://github.com/MachineWJQ6657/plant-disease-classification}.
 \end{abstract}
 
 %% ---------------------------------------------------------------------
 \section{Question and comparison}
-A classifier can perform well on controlled leaf photographs yet fail under different backgrounds, lighting, scales, and viewpoints. Our question is: \emph{How large is the clean-to-field gap, and can crop and color augmentation reduce it?} We use one backbone and compare two training procedures, rather than searching across architectures. Each input is one RGB photograph; the target is one of nine shared tomato labels.
+A classifier can perform well on controlled leaf photographs yet fail under different backgrounds, lighting, scales, and viewpoints. Our question is: How large is the clean-to-field gap, and can crop and color augmentation reduce it? We use one backbone and compare two training procedures, rather than searching across architectures. Each input is one RGB photograph; the target is one of nine shared tomato labels.
 
 The main experiment is a three-seed comparison of ordinary and strong-augmentation training with fresh views in every epoch. Both conditions use the same examples, trainable blocks, optimizer settings, batch size, and eight-epoch budget. All six checkpoint choices are finalized before either test set is scored. An earlier single-seed pilot with two fixed views per image is summarized in Appendix~\ref{app:pilot}; it is not part of the main comparison.
 
@@ -52,7 +52,7 @@ The main experiment is a three-seed comparison of ordinary and strong-augmentati
 
 %% ---------------------------------------------------------------------
 \section{Data and split integrity}
-PlantVillage provides controlled leaf photographs \cite{pv}; Cropped-PlantDoc provides the external classification images \cite{pd}. We use the nine-class mapping in the course specification and exclude PlantVillage target spot. Folder names are case-folded and stripped of non-alphanumeric characters before mapping. Exact names and class indices are saved in \code{results/class_mapping.csv}, and the processed file list in \code{results/manifest.csv}.
+PlantVillage provides controlled leaf photographs \cite{pv}; Cropped-PlantDoc provides the external classification images \cite{pd}. We use the nine-class mapping in the course specification and exclude PlantVillage target spot. Folder names are case-folded and stripped of non-alphanumeric characters before mapping. Exact names and class indices are saved in \code{project/results/class_mapping.csv}, and the processed file list (path, split, label, leaf group, and SHA-256 of every image) in \code{project/results/manifest.csv} of the repository.
 
 We preserve the official leaf-grouped PlantVillage color train/test lists. Within its original training partition, 15\% of documented leaf groups per class (rounded, split seed 664) enter validation. This data split is identical across training seeds. Images without a documented leaf ID stay in training. PlantDoc's original train and test folders are pooled \emph{only} as the external test: no PlantDoc image enters optimization or checkpoint selection.
 
@@ -71,7 +71,7 @@ Class & Train & Validation & Clean test & Field test\\\midrule
 
 %% ---------------------------------------------------------------------
 \section{Training protocol with fresh views}
-We replace the ImageNet MobileNetV3-Small output layer with nine logits \cite{mobile}. The prefix is frozen in evaluation mode; the last inverted residual block, final convolution, and classifier are trained (950,617 of 1,527,081 parameters). Within each seed, both conditions begin from the same complete state and receive exactly the same shuffled image indices in every epoch. The experiment isolates the training procedure; it does not compare backbones.
+We replace the ImageNet MobileNetV3-Small output layer with nine logits \cite{mobile}. The prefix is frozen in evaluation mode; the last inverted residual block, final convolution, and classifier are trained (950,617 of 1,527,081 parameters). Within each seed, both conditions begin from the same complete state and receive exactly the same shuffled image indices in every epoch. Freezing the early layers keeps six runs affordable on one GPU and holds the ImageNet features fixed, so the two conditions differ only in the training views; full fine-tuning was not tested. The experiment isolates the training procedure; it does not compare backbones.
 
 \begin{center}\small
 \begin{tabular}{p{.27\linewidth}p{.65\linewidth}}\toprule
@@ -133,14 +133,23 @@ Seed & Field accuracy change (pp) & Field macro-F1 change (pp)\\\midrule
 
 %% ---------------------------------------------------------------------
 \section{Per-class gaps and errors}
-\begin{center}\small
+\begin{center}\begin{minipage}{\linewidth}\centering\small
 \begin{tabular}{lr rrr rrr}\toprule
  & Field & \multicolumn{3}{c}{Ordinary recall (\%)} & \multicolumn{3}{c}{Strong recall (\%)}\\
 Class & $n$ & Clean & Field & Gap & Clean & Field & Gap\\\midrule
 \tableinput figures/recall.tex
 \bottomrule\end{tabular}
-\captionof{table}{Recall averaged over three seeds; gaps are differences of unrounded clean and field means in pp. Full per-seed recall/F1, SD, and class gaps are supplied as CSVs.}
-\end{center}
+\captionof{table}{Per-class recall averaged over three seeds. Clean is the in-domain (PlantVillage) test, Field the cross-domain (PlantDoc) test; the gap is clean minus field in pp, computed from unrounded means.}
+\end{minipage}\end{center}
+
+\begin{center}\begin{minipage}{\linewidth}\centering\small
+\begin{tabular}{lr rrr rrr}\toprule
+ & Field & \multicolumn{3}{c}{Ordinary F1 (\%)} & \multicolumn{3}{c}{Strong F1 (\%)}\\
+Class & $n$ & Clean & Field & Gap & Clean & Field & Gap\\\midrule
+\tableinput figures/f1.tex
+\bottomrule\end{tabular}
+\captionof{table}{Per-class F1 averaged over three seeds, with the clean-minus-field gap in pp. Unlike recall, F1 also penalizes predicting a class too often, so late blight has high field recall but low field F1. Per-seed values and SDs are in \code{project/results/per_seed_class_gaps.csv}.}
+\end{minipage}\end{center}
 
 \input{figures/errors.tex}
 
@@ -189,7 +198,7 @@ Seed & Training & High-confidence $n$ & Correct & Accuracy (\%)\\\midrule
 
 %% ---------------------------------------------------------------------
 \section{Reproducibility}
-All code is in \code{project/}: \code{data.py} (download, mapping, split), \code{train.py} (the six training runs and test evaluation), \code{analysis.py} (metrics, independent audit, three-seed summary), \code{figures.py} (report figures and tables), \code{replay.py} (raw-image replay), and \code{demo.py}. \code{project/results/} holds the frozen protocol, timestamped events, selected weights, per-epoch histories, per-image probabilities, class metrics, and audits; \code{selection_locked.json} records all six checkpoint hashes before test scoring. The executed Notebook recomputes the statistics and runs the checkpoints on example photographs without retraining. Provenance details and commands are in Appendix~\ref{app:repro}.
+All code and results are in the repository \url{https://github.com/MachineWJQ6657/plant-disease-classification}; paths below are relative to its \code{project/} folder: \code{data.py} (download, mapping, split), \code{train.py} (the six training runs and test evaluation), \code{analysis.py} (metrics, independent audit, three-seed summary), \code{figures.py} (report figures and tables), \code{replay.py} (raw-image replay), and \code{demo.py}. \code{results/} holds the frozen protocol, timestamped events, selected weights, per-epoch histories, per-image probabilities, class metrics, and audits; \code{selection_locked.json} records all six checkpoint hashes before test scoring. The executed Notebook recomputes the statistics and runs the checkpoints on example photographs without retraining. Provenance details and commands are in Appendix~\ref{app:repro}.
 
 \begin{thebibliography}{9}\small
 \bibitem{pv} S. P. Mohanty, D. P. Hughes, and M. Salath\'e. Using Deep Learning for Image-Based Plant Disease Detection. \emph{Frontiers in Plant Science}, 7:1419, 2016. \url{https://doi.org/10.3389/fpls.2016.01419}. Data and leaf metadata: \url{https://github.com/spMohanty/PlantVillage-Dataset}; official split lists: \url{https://huggingface.co/datasets/mohanty/PlantVillage/tree/main/splits}.
