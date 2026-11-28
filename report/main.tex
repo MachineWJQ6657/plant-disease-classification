@@ -1,7 +1,4 @@
-%% =====================================================================
-%% COMP 664 course project, Topic 2: plant disease classification
-%% Compile with pdfLaTeX (Overleaf default). Main document: main.tex
-%% =====================================================================
+%% COMP 664 course project, Topic 2. Compile with pdfLaTeX; main document: main.tex
 \documentclass[11pt,letterpaper]{article}
 \usepackage[margin=0.8in]{geometry}
 \usepackage[T1]{fontenc}
@@ -10,15 +7,10 @@
 \usepackage{xurl}
 \usepackage{fancyhdr}
 
-%% ---------------------------------------------------------------------
-%% EDIT HERE: team information (used on the title block only)
-%% ---------------------------------------------------------------------
-\newcommand{\TeamMembers}{Zheng Ni, Yuzhi Hu, Enci Zhang, Xinyi Xu} 
-%% ---------------------------------------------------------------------
+\newcommand{\TeamMembers}{Zheng Ni, Yuzhi Hu, Enci Zhang, Xinyi Xu}
 
 \pagestyle{fancy}\fancyhf{}
 \fancyhead[L]{\small COMP 664, Fall 2026}
-\fancyhead[R]{\small }
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
@@ -26,7 +18,7 @@
 \makeatletter\let\tableinput\@@input\makeatother
 \newcommand{\code}[1]{\texttt{\detokenize{#1}}}
 
-%% Numbers, tables, figures and wording are generated from project/results/ by project/figures.py
+%% Numbers, tables and figures are generated from project/results/ by project/figures.py
 \input{figures/numbers.tex}
 
 \begin{document}
@@ -36,25 +28,22 @@
 \end{center}
 
 \begin{abstract}
-We ask how much a classifier trained on controlled tomato-leaf photographs loses on field images, and whether strong crop and color augmentation reduces that loss. We fine-tune an ImageNet-pretrained MobileNetV3-Small under two matched conditions, ordinary and strong augmentation, using three paired seeds and newly sampled image views in every epoch (six models in total). The official PlantVillage split and all training budgets are fixed, and checkpoint selection uses only PlantVillage validation. Ordinary training reaches $\OrdCleanAcc\pm\OrdCleanAccSD$\% clean accuracy and $\OrdFieldAcc\pm\OrdFieldAccSD$\% field accuracy. Strong augmentation reaches $\AugCleanAcc\pm\AugCleanAccSD$\% and $\AugFieldAcc\pm\AugFieldAccSD$\%, respectively (mean $\pm$ sample SD over seeds). The mean paired field changes are $\DeltaAcc$ percentage points in accuracy and $\DeltaFone$ in macro-F1. \Conclusion\ Absolute field performance remains low: a training-only majority-class classifier reaches \BaseFieldAcc\% field accuracy. An earlier single-seed pilot is summarized in Appendix~\ref{app:pilot}. Code, the processed file list, checkpoints, per-image predictions, audits, and an executed Notebook accompany the report.
+We measure how much a tomato-leaf disease classifier trained on clean PlantVillage photographs degrades on PlantDoc field images, and whether strong crop and color augmentation reduces this gap. We fine-tune an ImageNet-pretrained MobileNetV3-Small with ordinary training and with strong crop and color augmentation, using three paired random seeds. Ordinary training reaches $\OrdCleanAcc\pm\OrdCleanAccSD$\% accuracy on the PlantVillage test set but only $\OrdFieldAcc\pm\OrdFieldAccSD$\% on PlantDoc. Strong augmentation raises field accuracy to $\AugFieldAcc\pm\AugFieldAccSD$\% and field macro-F1 from $\OrdFieldFone$\% to $\AugFieldFone$\%, but the gain is not consistent across seeds, and the clean-to-field gap stays above 75 percentage points for accuracy. On field images both models predict late blight for most inputs.
 \end{abstract}
 
 %% ---------------------------------------------------------------------
-\section{Question and comparison}
-A classifier can perform well on controlled leaf photographs yet fail under different backgrounds, lighting, scales, and viewpoints. Our question is: How large is the clean-to-field gap, and can crop and color augmentation reduce it? We use one backbone and compare two training procedures, rather than searching across architectures. Each input is one RGB photograph; the target is one of nine shared tomato labels.
+\section{Introduction}
+PlantVillage contains tomato leaves photographed one at a time on a plain background under controlled lighting. PlantDoc contains leaves photographed in ordinary field conditions, with cluttered backgrounds, varied lighting, and varied viewpoints. A classifier trained on the first may therefore fail on the second. We ask two questions: (1) how much does a classifier trained on clean leaf photographs degrade on field images, and (2) can a simple training change reduce this gap?
 
-The main experiment is a three-seed comparison of ordinary and strong-augmentation training with fresh views in every epoch. Both conditions use the same examples, trainable blocks, optimizer settings, batch size, and eight-epoch budget. All six checkpoint choices are finalized before either test set is scored. An earlier single-seed pilot with two fixed views per image is summarized in Appendix~\ref{app:pilot}; it is not part of the main comparison.
-
-\begin{center}
-\includegraphics[width=.95\linewidth]{figures/performance.pdf}
-\captionof{figure}{Performance of the six models. Bars show the mean of three seeds; error bars show sample SD, and dots show individual runs. All runs use the same 3,351 clean and 742 field test images.}
-\end{center}
+We fine-tune one ImageNet-pretrained network and compare two training procedures that differ only in data augmentation: ordinary training, and training with strong random crops and color jitter. Each procedure is run with three random seeds. We report accuracy and macro-F1 on both test sets, and the in-domain and cross-domain performance of every class.
 
 %% ---------------------------------------------------------------------
-\section{Data and split integrity}
-PlantVillage provides controlled leaf photographs \cite{pv}; Cropped-PlantDoc provides the external classification images \cite{pd}. We use the nine-class mapping in the course specification and exclude PlantVillage target spot. Folder names are case-folded and stripped of non-alphanumeric characters before mapping. Exact names and class indices are saved in \code{project/results/class_mapping.csv}, and the processed file list (path, split, label, leaf group, and SHA-256 of every image) in \code{project/results/manifest.csv}, submitted with the code.
+\section{Data}
+\textbf{Classes.} We use the tomato images of PlantVillage \cite{pv} for training and in-domain evaluation, and the tomato images of the cropped PlantDoc classification set \cite{pd} for out-of-domain evaluation. The nine classes follow the course mapping between PlantDoc and PlantVillage labels. Directory names are normalized in code (lower-cased, with non-alphanumeric characters removed) before mapping; PlantVillage target spot, which has no PlantDoc counterpart, is excluded. The processed file list, with the path, split, label, and SHA-256 hash of every image, is saved with the submission as \code{project/results/manifest.csv}.
 
-We preserve the official leaf-grouped PlantVillage color train/test lists. Within its original training partition, 15\% of documented leaf groups per class (rounded, split seed 664) enter validation. This data split is identical across training seeds. Images without a documented leaf ID stay in training. PlantDoc's original train and test folders are pooled \emph{only} as the external test: no PlantDoc image enters optimization or checkpoint selection.
+\textbf{Splits.} We keep the official leaf-grouped PlantVillage train/test split, so images of the same leaf never appear in both. For checkpoint selection we move 15\% of the documented leaf groups of each class from the training set to a validation set. Mosaic virus has no documented leaf groups, so validation covers eight classes. PlantDoc is used only as an external test set: none of its images is used for training or for checkpoint selection. Its original train and test folders are pooled into one field test set.
+
+\textbf{Duplicates.} Exact byte-level copies are removed: five PlantVillage training images that also occur in a held-out split, and four PlantDoc images that are duplicates or carry conflicting labels. Table~\ref{tab:data} gives the resulting split sizes. The PlantDoc test set is small and unbalanced; spider mites, in particular, has only two images.
 
 \begin{center}\small
 \begin{tabular}{lrrrr}\toprule
@@ -62,178 +51,92 @@ Class & Train & Validation & Clean test & Field test\\\midrule
 \tableinput figures/counts.tex
 \midrule Total & 12,036 & 1,364 & 3,351 & 742\\\bottomrule
 \end{tabular}
-\captionof{table}{The audited data split, identical in all six runs.}
+\captionof{table}{Number of images per class. Train, validation, and clean test come from PlantVillage; the field test is PlantDoc.\label{tab:data}}
 \end{center}
-
-\textbf{Incomplete group metadata.} Exactly 4,280 training and 1,060 clean-test images lack documented leaf IDs. No retained \emph{documented} leaf group crosses splits, but unknown identities prevent a complete same-leaf independence guarantee. Mosaic virus has no documented training leaf groups and therefore zero validation examples. Selection uses the eight supported validation classes; training and both tests cover all nine. We do not create potentially leaking image-level validation samples to fill this missing class.
-
-\textbf{Duplicate audit.} SHA-256 checks remove five source-training entries with copies in held-out splits. Among 746 mapped PlantDoc entries, two redundant same-label copies and both copies of one contradictory-label image are removed, leaving 742 byte-unique entries. These checks do not rule out visually similar crops, recompressed images, or near-duplicates. The two spider-mite examples are visually related multi-panel illustrations, so their independence and representativeness are especially uncertain. Reconstruction of the file lists from pinned upstream revisions is described in Appendix~\ref{app:repro}.
 
 %% ---------------------------------------------------------------------
-\section{Training protocol with fresh views}
-We replace the ImageNet MobileNetV3-Small output layer with nine logits \cite{mobile}. The prefix is frozen in evaluation mode; the last inverted residual block, final convolution, and classifier are trained (950,617 of 1,527,081 parameters). Within each seed, both conditions begin from the same complete state and receive exactly the same shuffled image indices in every epoch. Freezing the early layers keeps six runs affordable on one GPU and holds the ImageNet features fixed, so the two conditions differ only in the training views; full fine-tuning was not tested. The experiment isolates the training procedure; it does not compare backbones.
+\section{Method}
+\textbf{Model.} We use MobileNetV3-Small pretrained on ImageNet \cite{mobile} and replace its output layer with a nine-class classifier. We fine-tune the last inverted residual block, the final convolution, and the classifier (950,617 of 1,527,081 parameters) and keep the earlier layers frozen. This keeps the six training runs affordable on one GPU, and both conditions start from the same ImageNet features.
 
-\begin{center}\small
-\begin{tabular}{p{.27\linewidth}p{.65\linewidth}}\toprule
-Setting & Prespecified value\\\midrule
-Seeds and budget & 664, 665, 666; two conditions each; 8 epochs, batch 96\\
-Optimization & Cross-entropy; AdamW, learning rate $5\times10^{-4}$, weight decay $10^{-4}$\\
-Input and normalization & RGB, $128\times128$; ImageNet channel mean and standard deviation\\
-Ordinary & Resize, horizontal flip with probability 0.5\\
-Strong & Additional random crop (area .55--1.0, log-uniform aspect ratio .8--1.25); brightness/contrast/saturation jitter .35 and hue jitter .07\\
-Image exposure & 12,036 images per epoch; 1,008 optimizer steps and 96,288 presentations per model\\
-Selection & First epoch maximizing source-validation supported-class macro-F1\\
-Execution & One RTX 5070 Ti Laptop GPU; PyTorch 2.7.1+cu128, torchvision 0.22.1+cu128; deterministic algorithms; TF32 disabled\\\bottomrule
-\end{tabular}
-\captionof{table}{Matched settings for the six models. No target-domain adaptation or architecture search is performed.}
-\end{center}
+\textbf{Conditions.} \emph{Ordinary} training resizes each image to $128\times128$ and flips it horizontally with probability 0.5. \emph{Strong} training additionally applies a random crop covering 55--100\% of the image area (aspect ratio 0.8--1.25) and random brightness, contrast, saturation (factor 0.65--1.35), and hue ($\pm0.07$) changes. A new augmented view of every training image is drawn in every epoch. Within each seed, both conditions start from the same weights and see the training images in the same order, so they differ only in augmentation.
 
-\textbf{Fresh views, not cached random transformations.} We cache only deterministic EXIF-corrected RGB resizing as uint8 pixels. Each image receives a newly sampled PIL transformation in each epoch. A local RNG keyed by training seed, epoch, and image index makes the views reproducible independently of thread scheduling. Ordinary flip draws are fresh even though only two flipped/unflipped outcomes are possible. Strong crops and color factors are redrawn each epoch. Frozen-prefix activations are computed afresh per batch, converted to float16, then returned to float32 for the trainable blocks; they are never reused across epochs.
-
-\textbf{Recorded evidence.} Each run logs loss, validation scores, sample-order and initialization hashes, and selected weights; an aggregate audit checks the pairing and a checkpoint lock written before test evaluation (Appendix~\ref{app:repro}). Total exposure is 577,728 image presentations and 6,048 optimizer steps.
+\textbf{Training and selection.} All six models (two conditions, seeds 664, 665, 666) are trained for 8 epochs with batch size 96, cross-entropy loss, and AdamW (learning rate $5\times10^{-4}$, weight decay $10^{-4}$). After each epoch we compute macro-F1 on the PlantVillage validation set and keep the best epoch. Test sets are evaluated only after all six checkpoints have been chosen. Figure~\ref{fig:history} shows that validation macro-F1 levels off after about four epochs; strong augmentation learns more slowly and ends slightly lower on the clean validation set.
 
 \begin{center}
 \includegraphics[width=.95\linewidth]{figures/history.pdf}
-\captionof{figure}{Mean training loss and supported-class validation macro-F1 over three seeds; shading shows sample SD. Epoch selection is performed separately for each model.}
+\captionof{figure}{Training loss and PlantVillage validation macro-F1 per epoch, averaged over three seeds (shading: sample SD).\label{fig:history}}
 \end{center}
 
+\textbf{Metrics.} Accuracy is the fraction of correct predictions. Macro-F1 is the unweighted mean of the nine per-class F1 scores, so rare classes count as much as common ones. The clean-to-field gap is the clean-test metric minus the field-test metric, in percentage points (pp). We report the mean and sample standard deviation over the three seeds; the seeds are three fits evaluated on the same test images, not three independent test sets.
+
 %% ---------------------------------------------------------------------
-\section{Overall results and seed variability}
-Accuracy is the correct-prediction fraction. Test macro-F1 averages all nine class F1 scores equally, using zero for an undefined class score. The clean-to-field gap is the clean metric minus the field metric, in percentage points (pp). A smaller gap alone does not establish improved field performance.
+\section{Results}
+\subsection{Overall degradation and the effect of augmentation}
+Table~\ref{tab:summary} answers the first question. With ordinary training, accuracy falls from $\OrdCleanAcc$\% on clean images to $\OrdFieldAcc$\% on field images, a gap of $\OrdGapAcc$ pp; for macro-F1 the gap is $\OrdGapFone$ pp. Field performance is only modestly above a classifier that always predicts the most common training class (\BaseClass), which reaches \BaseFieldAcc\% field accuracy.
 
 \begin{center}\small
-\begin{tabular}{lrrrr}\toprule
- & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Macro-F1 (\%)}\\
-Training & Clean & Field & Clean & Field\\\midrule
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}\toprule
+ & \multicolumn{3}{c}{Accuracy (\%)} & \multicolumn{3}{c}{Macro-F1 (\%)}\\\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Training & Clean & Field & Gap (pp) & Clean & Field & Gap (pp)\\\midrule
 \tableinput figures/summary.tex
 \bottomrule\end{tabular}
-\captionof{table}{Results of the three-seed experiment, mean $\pm$ sample SD over the three paired seeds. These are three fits on the same test collections, not three independent datasets.}
+\captionof{table}{Test results, mean $\pm$ sample SD over three seeds. The majority-class row always predicts the most common training class.\label{tab:summary}}
 \end{center}
 
+Strong augmentation reduces the gap slightly, to $\AugGapAcc$ pp in accuracy and $\AugGapFone$ pp in macro-F1. Part of this reduction comes from a small loss on clean images ($\AugCleanAcc$\% versus $\OrdCleanAcc$\%), and part from a gain on field images. Table~\ref{tab:seeds} compares the two conditions within each seed. Field accuracy improves by $\DeltaAcc\pm\DeltaAccSD$ pp and field macro-F1 by $\DeltaFone\pm\DeltaFoneSD$ pp on average, but seed 664 shows no improvement. With three seeds and differences of this size, the benefit of augmentation is suggestive rather than established.
+
 \begin{center}\small
-\begin{tabular}{rlrrrrr}\toprule
- & & Selected & \multicolumn{2}{c}{Accuracy (\%)} & \multicolumn{2}{c}{Macro-F1 (\%)}\\
-Seed & Training & epoch & Clean & Field & Clean & Field\\\midrule
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}\toprule
+ & \multicolumn{3}{c}{Field accuracy (\%)} & \multicolumn{3}{c}{Field macro-F1 (\%)}\\\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Seed & Ordinary & Strong & Change & Ordinary & Strong & Change\\\midrule
 \tableinput figures/seeds.tex
 \bottomrule\end{tabular}
-\captionof{table}{Every run, without selection by field performance. Seed 664 is fixed as the illustrative checkpoint pair for figures and demonstrations.}
+\captionof{table}{Field results for each seed. Change is strong minus ordinary within the same seed, in pp.\label{tab:seeds}}
 \end{center}
 
-\begin{center}\small
-\begin{tabular}{rrr}\toprule
-Seed & Field accuracy change (pp) & Field macro-F1 change (pp)\\\midrule
-\tableinput figures/deltas.tex
-\bottomrule\end{tabular}
-\captionof{table}{Paired strong-minus-ordinary changes. Their mean $\pm$ SD is $\DeltaAcc\pm\DeltaAccSD$ pp for accuracy and $\DeltaFone\pm\DeltaFoneSD$ pp for macro-F1.}
-\end{center}
+\subsection{Per-class gaps}
+Tables~\ref{tab:recall} and~\ref{tab:f1} give the in-domain and cross-domain recall and F1 of every class. On clean images every class has recall above 84\%. On field images most classes are almost never recognized: healthy, bacterial spot, mosaic virus, yellow leaf curl, leaf mold, and spider mites all have field recall near zero. The only class with high field recall is late blight, and its field F1 is low because many images of other classes are also predicted as late blight.
 
-\Conclusion\ Three seeds expose training variability but remain too few for a strong claim of universal benefit or equivalence. Per-seed class-stratified paired bootstrap intervals are also supplied; they condition on each fitted pair and observed field images, and do not replace seed variability.
-
-\textbf{Reference floor.} A training-only majority-class classifier reaches \BaseFieldAcc\% field accuracy and \BaseFieldFone\% field macro-F1 (Section~\ref{sec:baseline}). Both conditions exceed this floor but remain far below their clean-test performance.
-
-%% ---------------------------------------------------------------------
-\section{Per-class gaps and errors}
 \begin{center}\begin{minipage}{\linewidth}\centering\small
 \begin{tabular}{lr rrr rrr}\toprule
- & Field & \multicolumn{3}{c}{Ordinary recall (\%)} & \multicolumn{3}{c}{Strong recall (\%)}\\
+ & Field & \multicolumn{3}{c}{Ordinary recall (\%)} & \multicolumn{3}{c}{Strong recall (\%)}\\\cmidrule(lr){3-5}\cmidrule(lr){6-8}
 Class & $n$ & Clean & Field & Gap & Clean & Field & Gap\\\midrule
 \tableinput figures/recall.tex
 \bottomrule\end{tabular}
-\captionof{table}{Per-class recall averaged over three seeds. Clean is the in-domain (PlantVillage) test, Field the cross-domain (PlantDoc) test; the gap is clean minus field in pp, computed from unrounded means.}
+\captionof{table}{Per-class recall, mean over three seeds. Gap is clean minus field in pp.\label{tab:recall}}
 \end{minipage}\end{center}
 
 \begin{center}\begin{minipage}{\linewidth}\centering\small
 \begin{tabular}{lr rrr rrr}\toprule
- & Field & \multicolumn{3}{c}{Ordinary F1 (\%)} & \multicolumn{3}{c}{Strong F1 (\%)}\\
+ & Field & \multicolumn{3}{c}{Ordinary F1 (\%)} & \multicolumn{3}{c}{Strong F1 (\%)}\\\cmidrule(lr){3-5}\cmidrule(lr){6-8}
 Class & $n$ & Clean & Field & Gap & Clean & Field & Gap\\\midrule
 \tableinput figures/f1.tex
 \bottomrule\end{tabular}
-\captionof{table}{Per-class F1 averaged over three seeds, with the clean-minus-field gap in pp. Unlike recall, F1 also penalizes predicting a class too often, so late blight has high field recall but low field F1. Per-seed values and SDs are in \code{project/results/per_seed_class_gaps.csv}.}
+\captionof{table}{Per-class F1, mean over three seeds. Gap is clean minus field in pp.\label{tab:f1}}
 \end{minipage}\end{center}
 
-\input{figures/errors.tex}
+\input{figures/errors.tex}\ The confusion matrices for seed 664 (Figure~\ref{fig:confusions}) show this pattern: most field images fall into the late-blight column regardless of their true class. In F1 terms, the benefit of strong augmentation is concentrated in Septoria (field F1 from about 13\% to 25\%). The spider-mite row has only two images, so its recall and F1 are not informative.
 
 \begin{center}
 \includegraphics[width=.94\linewidth]{figures/confusions.pdf}
-\captionof{figure}{Field confusion counts for the prespecified illustrative seed 664. Rows are true classes; columns are predictions. Grayscale uses the fraction within each true class. This pair was not chosen for its field score.}
+\captionof{figure}{Field-test confusion matrices for seed 664. Rows are true classes and columns are predictions; cells show counts, and shading shows the fraction of each true class.\label{fig:confusions}}
 \end{center}
 
-High recall for a frequently predicted label can coexist with poor precision and zero recall for other labels. Macro-F1 exposes this concentration. The two spider-mite entries receive the same macro-F1 weight as 149 Septoria images; one changed spider-mite prediction shifts that run's class recall by 50 pp. Averaging seeds does not create additional independent spider-mite examples.
+%% ---------------------------------------------------------------------
+\section{Discussion and limitations}
+The models learn PlantVillage almost perfectly but transfer poorly: on field images they collapse onto one or two labels. Crop and color augmentation changes the framing and color of training images, but every training image still shows a single leaf on a plain background, whereas PlantDoc images differ mostly in background and clutter. This is a plausible reason why the intervention helps only slightly; background randomization would target this difference more directly.
+
+Several limitations apply. We tested one backbone, one input resolution ($128\times128$), and partial fine-tuning, so the results describe the effect of augmentation in this setup, not the best achievable field accuracy. Mosaic virus has no validation images, so checkpoint selection ignores it. Some PlantVillage images lack leaf IDs, and exact-hash checks do not remove near-duplicates. The PlantDoc test set is small and has very few images for some classes. Finally, before this three-seed study we ran a single-seed pilot with the same comparison (field accuracy 19.54\% ordinary versus 18.73\% strong). Because we had already looked at the field results when designing the final experiment, the PlantDoc numbers should be read as exploratory rather than as a fully held-out confirmation.
 
 %% ---------------------------------------------------------------------
-\section{Baseline, confidence, and example photographs}\label{sec:baseline}
-\textbf{Training-only majority-class baseline.} A constant classifier chosen by the most common \emph{source training} label (\BaseClass) achieves \BaseCleanAcc\% clean and \BaseFieldAcc\% field accuracy, with macro-F1 \BaseCleanFone\% and \BaseFieldFone\%. No field label is used to choose this baseline. Exceeding it does not imply useful diagnostic performance.
-
-\begin{center}\small
-\begin{tabular}{rlrrr}\toprule
-Seed & Training & High-confidence $n$ & Correct & Accuracy (\%)\\\midrule
-\tableinput figures/confidence.tex
-\bottomrule\end{tabular}
-\captionof{table}{Field predictions with maximum softmax $\geq0.9$. These uncalibrated scores must not be interpreted as reliable disease probabilities.}
-\end{center}
-
-\begin{center}
-\begin{minipage}{.47\linewidth}\centering
-\includegraphics[height=1.8in,width=.95\linewidth,keepaspectratio]{figures/examples/field.jpg}\\
-\small Label: early blight.\\Ordinary: \DemoOrdOne.\\Strong: \DemoAugOne.
-\end{minipage}\hfill
-\begin{minipage}{.47\linewidth}\centering
-\includegraphics[height=1.8in,width=.95\linewidth,keepaspectratio]{figures/examples/field_second.jpg}\\
-\small Label: early blight.\\Ordinary: \DemoOrdTwo.\\Strong: \DemoAugTwo.
-\end{minipage}
-\captionof{figure}{Two fixed demonstration photographs, scored by the seed-664 pair. They were selected during the earlier pilot analysis, before the three-seed runs, and do not estimate typical performance. Exact paths and credits appear in \code{project/examples/credits.csv}.\label{fig:examples}}
-\end{center}
-
-\textbf{Reading the examples.} Individual corrections or regressions do not determine the main conclusion. We use all test images and all prespecified seeds for that comparison. The executed Notebook loads the actual checkpoints for offline inference, checks the example hashes, and compares the predictions with the saved full-test evidence.
-
-%% ---------------------------------------------------------------------
-\section{Limitations and conclusion}
-\Conclusion\ This applies to the specified backbone, partial fine-tuning, resolution, budget, transformations, and collections. It does not establish the behavior of all augmentation strategies or a reliable field diagnostic system.
-
-\textbf{Absolute performance.} Field accuracy of about 19--20\% is only about 9--10 pp above the \BaseFieldAcc\% majority-class floor, and most field images are assigned to one label (late blight). We did not test larger backbones, higher input resolution, or full fine-tuning, so the study speaks to the effect of augmentation in this training setup rather than to the best achievable field accuracy.
-
-\textbf{Data limits.} Mosaic virus still lacks validation support. Unknown leaf IDs and near-duplicates prevent a full independence guarantee. PlantDoc is an internet-collected cropped-image benchmark with ambiguous examples, not a prospective collection of independently diagnosed farm leaves. Its two spider-mite entries provide weak class evidence. Three seeds describe limited optimization variation, not variation across farms, seasons, or dataset construction.
-
-\textbf{Exploratory status.} The three-seed experiment was designed after inspecting the pilot's field results (Appendix~\ref{app:pilot}). Field labels never enter optimization or checkpoint selection, but the benchmark was already examined: this is exploratory follow-up evidence, not a pristine confirmatory external test. A stronger study would predefine a new target-development/test separation and evaluate on an independent field collection. Target-domain fine-tuning must use its own development subset.
-
-%% ---------------------------------------------------------------------
-\section{Reproducibility}
-All code and results are in the submitted \code{project/} folder, and the paths below are relative to it: \code{data.py} (download, mapping, split), \code{train.py} (the six training runs and test evaluation), \code{analysis.py} (metrics, independent audit, three-seed summary), \code{figures.py} (report figures and tables), \code{replay.py} (raw-image replay), and \code{demo.py}. \code{results/} holds the frozen protocol, timestamped events, selected weights, per-epoch histories, per-image probabilities, class metrics, and audits; \code{selection_locked.json} records all six checkpoint hashes before test scoring. The executed Notebook recomputes the statistics and runs the checkpoints on example photographs without retraining. Provenance details and commands are in Appendix~\ref{app:repro}.
+\section{Conclusion}
+A MobileNetV3-Small fine-tuned on clean PlantVillage photographs loses about 78 percentage points of accuracy on PlantDoc field images, and its field accuracy is only about 9 points above that of always predicting the most common class. Strong crop and color augmentation narrows the gap by about two percentage points and improves field accuracy and macro-F1 on average, but not in every seed. Simple augmentation of clean images is therefore not enough to make the classifier usable on field photographs.
 
 \begin{thebibliography}{9}\small
-\bibitem{pv} S. P. Mohanty, D. P. Hughes, and M. Salath\'e. Using Deep Learning for Image-Based Plant Disease Detection. \emph{Frontiers in Plant Science}, 7:1419, 2016. \url{https://doi.org/10.3389/fpls.2016.01419}. Data and leaf metadata: \url{https://github.com/spMohanty/PlantVillage-Dataset}; official split lists: \url{https://huggingface.co/datasets/mohanty/PlantVillage/tree/main/splits}.
-\bibitem{pd} D. Singh et al. PlantDoc: A Dataset for Visual Plant Disease Detection. \emph{CoDS-COMAD}, 2020. \url{https://doi.org/10.1145/3371158.3371196}. Cropped classification data: \url{https://github.com/pratikkayal/PlantDoc-Dataset}, CC BY 4.0.
-\bibitem{mobile} A. Howard et al. Searching for MobileNetV3. \emph{ICCV}, 2019. \url{https://arxiv.org/abs/1905.02244}. Three-seed runs: torchvision 0.22.1, \code{IMAGENET1K_V1}; pilot: torchvision 0.20.1 with the same ImageNet initialization.
+\bibitem{pv} S. P. Mohanty, D. P. Hughes, and M. Salath\'e. Using deep learning for image-based plant disease detection. \emph{Frontiers in Plant Science}, 7:1419, 2016.
+\bibitem{pd} D. Singh, N. Jain, P. Jain, P. Kayal, S. Kumawat, and N. Batra. PlantDoc: A dataset for visual plant disease detection. In \emph{CoDS-COMAD}, 2020.
+\bibitem{mobile} A. Howard et al. Searching for MobileNetV3. In \emph{ICCV}, 2019.
 \end{thebibliography}
-
-%% ---------------------------------------------------------------------
-\appendix
-\section{Earlier single-seed pilot}\label{app:pilot}
-Before the three-seed study, a pilot trained ordinary and strong-augmentation models with two fixed augmented views per image. It used one seed, PyTorch 2.5.1 on CPU, and cached prefix activations. It achieved 97.25\% clean and 19.54\% field accuracy with ordinary training, and 96.09\% and 18.73\% with strong augmentation (field macro-F1 8.67\% and 8.57\%).
-
-The three-seed runs change view refresh, RNG implementation, data streaming, and execution environment. A difference from the pilot therefore cannot be attributed purely to fresh augmentation; the controlled comparison is ordinary versus strong \emph{within} the matched three-seed protocol. The two demonstration photographs in Figure~\ref{fig:examples} were chosen during the pilot analysis and were not reselected afterwards.
-
-The pilot's weights, predictions, and code are not part of the final repository; they remain in its git history (commit \code{adb96c0}). Replaying both pilot checkpoints on all 4,093 raw test images reproduced all 8,186 labels (probability differences below 0.000260), which confirms inference, not the pilot's training history.
-
-\section{Reproducibility and provenance}\label{app:repro}
-\textbf{Data reconstruction.} Fixed upstream revisions regenerate the manifest, exclusions, and class mapping byte for byte (\code{data.py}). Deterministic image decoding checks every raw file against its recorded SHA-256. Portable disk names encode Windows-invalid characters while the manifest keeps the original paths. These are integrity checks, not proof that every label is biologically correct. Raw data are not bundled; the pinned archives need about 3.5 GB.
-
-\textbf{Run records.} Each run logs loss, validation scores, optimizer steps, sample-order and initialization hashes, selected weights, and completion records. \code{analysis.py} checks equal initialization and order within each pair, the training budgets, unchanged frozen-prefix parameters, all 48 epochs, and that every checkpoint still matches its hash locked before test evaluation; it also recomputes every metric from the per-image predictions.
-
-\textbf{Independent replay.} After training, all six models were replayed on the raw test images: all 24,558 predicted labels matched the saved predictions (maximum probability difference 0.0003113); see \code{results/replay_verification.json}.
-
-\textbf{Code consolidation.} The models were trained by \code{experiment_fresh.py} (SHA-256 recorded in \code{results/protocol.json}), kept in commit \code{adb96c0}. The code was later consolidated into the files above. On a synthetic dataset, the old and new code produced identical downloads and manifests, bit-identical checkpoints, identical training histories, byte-identical predictions and metric tables, and identical replay results; on the saved results, \code{analysis.py} and \code{figures.py} reproduce every table, macro, and figure exactly.
-
-\textbf{Commands} (run from \code{project/}):
-\begin{small}
-\begin{verbatim}
-python analysis.py --results results    # recompute and audit every table
-python -m unittest discover -s tests -v
-python demo.py examples/field.jpg
-python data.py --data data              # raw data, ~3.5 GB
-python train.py --data data --out rerun --device cuda
-python replay.py --data data --seed-dir results/seed_664
-\end{verbatim}
-\end{small}
-Training used PyTorch 2.7.1+cu128 on one GPU (\code{requirements-train.txt}); the Notebook, demo, analysis, and tests use PyTorch 2.5.1 on CPU (\code{requirements.txt}).
 \end{document}

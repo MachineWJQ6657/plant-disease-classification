@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 SHORT = ['Healthy', 'Early blight', 'Bacterial spot', 'Late blight', 'Mosaic', 'Yellow curl', 'Leaf mold', 'Septoria',
          'Spider mites']
 LABEL = {'ordinary': 'Ordinary', 'strong': 'Crop + color'}
-CELLS = [('pv_test', 'accuracy'), ('pd_test', 'accuracy'), ('pv_test', 'macro_f1'), ('pd_test', 'macro_f1')]
+CONDITIONS = ['ordinary', 'strong']
 
 
 def row(values):
@@ -37,32 +37,12 @@ def build(root, dest):
     history = pd.read_csv(root / 'all_history.csv')
     effects = pd.read_csv(root / 'paired_seed_summary.csv').set_index('split')
     deltas = pd.read_csv(root / 'paired_seed_deltas.csv')
-    audit = pd.read_csv(root / 'training_audit.csv').set_index(['seed', 'condition'])
     baseline = pd.read_csv(root / 'majority_baseline.csv').set_index('split')
-    confidence = pd.read_csv(root / 'confidence_diagnostics.csv')
     manifest = pd.read_csv(root / 'manifest.csv')
     interpretation = json.loads((root / 'interpretation.json').read_text(encoding='utf-8'))
     seeds = sorted(per_seed.seed.unique())
     plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 10, 'pdf.fonttype': 42,
                          'axes.spines.top': False, 'axes.spines.right': False})
-
-    fig, axes = plt.subplots(1, 2, figsize=(9.5, 3.3), layout='constrained')
-    for ax, metric, title in zip(axes, ['accuracy', 'macro_f1'], ['Accuracy', 'Macro-F1']):
-        for j, (condition, color) in enumerate([('ordinary', '#555555'), ('strong', '#BBBBBB')]):
-            means = [100 * summary.loc[(condition, s), metric + '_mean'] for s in ['pv_test', 'pd_test']]
-            stds = [100 * summary.loc[(condition, s), metric + '_std'] for s in ['pv_test', 'pd_test']]
-            positions = np.arange(2) + (j - .5) * .32
-            bars = ax.bar(positions, means, .32, color=color, edgecolor='black', linewidth=.5, yerr=stds, capsize=4,
-                          label=LABEL[condition])
-            ax.bar_label(bars, fmt='%.1f', padding=7, fontsize=8)
-            for pos, split in zip(positions, ['pv_test', 'pd_test']):
-                values = per_seed[(per_seed.condition == condition) & (per_seed.split == split)].sort_values('seed')
-                ax.scatter(pos + np.array([-.045, 0, .045]), 100 * values[metric].to_numpy(), s=15, c='black', zorder=3)
-        ax.set(xticks=[0, 1], xticklabels=['PlantVillage', 'PlantDoc'], ylim=(0, 111), ylabel=title + ' (%)')
-        ax.set_yticks([0, 25, 50, 75, 100])
-    axes[0].legend(frameon=False, fontsize=8, loc='upper right')
-    fig.savefig(dest / 'performance.pdf', dpi=180, metadata={'CreationDate': None})
-    plt.close(fig)
 
     fig, axes = plt.subplots(1, 2, figsize=(9.5, 3), layout='constrained')
     for condition, color in [('ordinary', '#333333'), ('strong', '#999999')]:
@@ -98,15 +78,29 @@ def build(root, dest):
     counts = pd.crosstab(manifest.category, manifest.split)
     write(dest / 'counts.tex', [row([name] + [f'{counts.loc[name, s]:,}' for s in ['pv_train', 'pv_val', 'pv_test', 'pd_test']])
                                 for name in NAMES])
-    write(dest / 'summary.tex', [row([LABEL[c]] + [f"${100 * summary.loc[(c, s), m + '_mean']:.2f} \\pm "
-                                                   f"{100 * summary.loc[(c, s), m + '_std']:.2f}$" for s, m in CELLS])
-                                 for c in ['ordinary', 'strong']])
     by_seed = per_seed.set_index(['seed', 'condition', 'split'])
-    write(dest / 'seeds.tex', [row([seed, LABEL[c], int(audit.loc[(seed, c), 'selected_epoch'])]
-                                   + [f'{100 * by_seed.loc[(seed, c, s), m]:.2f}' for s, m in CELLS])
-                               for seed in seeds for c in ['ordinary', 'strong']])
-    write(dest / 'deltas.tex', [row([int(r.seed), f'{r.accuracy_delta_pp:+.2f}', f'{r.macro_f1_delta_pp:+.2f}'])
-                                for r in deltas[deltas.split == 'pd_test'].sort_values('seed').itertuples()])
+    def pm(v, sign=''):  # mean and sample SD over seeds
+        v = np.asarray(v, dtype=float)
+        return f'${v.mean():{sign}.2f} \\pm {v.std(ddof=1):.2f}$'
+    lines = []
+    for c in CONDITIONS:
+        cells = []
+        for m in ['accuracy', 'macro_f1']:
+            clean, field = (100 * np.array([by_seed.loc[(seed, c, s), m] for seed in seeds]) for s in ['pv_test', 'pd_test'])
+            cells += [pm(clean), pm(field), pm(clean - field)]
+        lines.append(row([LABEL[c]] + cells))
+    base = [[100 * baseline.loc[s, m] for s in ['pv_test', 'pd_test']] for m in ['accuracy', 'macro_f1']]
+    lines.append('\\midrule ' + row(['Majority class'] + [f'{v:.2f}' for clean, field in base for v in (clean, field, clean - field)]))
+    write(dest / 'summary.tex', lines)
+    field = deltas[deltas.split == 'pd_test'].set_index('seed')
+    lines, columns = [], []
+    for m, d in [('accuracy', 'accuracy_delta_pp'), ('macro_f1', 'macro_f1_delta_pp')]:
+        columns += [[100 * by_seed.loc[(seed, c, 'pd_test'), m] for seed in seeds] for c in CONDITIONS]
+        columns.append(field.loc[seeds, d].to_numpy())
+    for i, seed in enumerate(seeds):
+        lines.append(row([seed] + [f'{col[i]:+.2f}' if k % 3 == 2 else f'{col[i]:.2f}' for k, col in enumerate(columns)]))
+    lines.append('\\midrule ' + row(['Mean'] + [pm(col, '+' if k % 3 == 2 else '') for k, col in enumerate(columns)]))
+    write(dest / 'seeds.tex', lines)
     for metric in ['recall', 'f1']:  # per-class clean, field and clean-minus-field gap, mean over seeds
         lines = []
         for name in NAMES:
@@ -116,8 +110,6 @@ def build(root, dest):
                 values += [f'{clean:.1f}', f'{field:.1f}', f'{clean - field:.1f}']
             lines.append(row(values))
         write(dest / f'{metric}.tex', lines)
-    write(dest / 'confidence.tex', [row([r.seed, LABEL[r.condition], r.high_confidence_n, r.high_confidence_correct,
-                                         f'{100 * r.high_confidence_accuracy:.2f}']) for r in confidence.itertuples()])
     write(dest / 'errors.tex', [' '.join(interpretation['field_error_summary'])])
 
     macros = {}
@@ -129,18 +121,15 @@ def build(root, dest):
     for m, label in [('accuracy', 'Acc'), ('macro_f1', 'Fone')]:
         macros[f'Delta{label}'] = f"{effects.loc['pd_test', m + '_delta_mean_pp']:+.2f}"
         macros[f'Delta{label}SD'] = f"{effects.loc['pd_test', m + '_delta_std_pp']:.2f}"
+    for c, prefix in [('ordinary', 'Ord'), ('strong', 'Aug')]:
+        for m, label in [('accuracy', 'Acc'), ('macro_f1', 'Fone')]:
+            gap = [100 * (by_seed.loc[(seed, c, 'pv_test'), m] - by_seed.loc[(seed, c, 'pd_test'), m]) for seed in seeds]
+            macros[f'{prefix}Gap{label}'] = f'{np.mean(gap):.2f}'
     macros['BaseClass'] = baseline.loc['pv_test', 'category'].lower()
     for s, domain in [('pv_test', 'Clean'), ('pd_test', 'Field')]:
         macros[f'Base{domain}Acc'] = f"{100 * baseline.loc[s, 'accuracy']:.2f}"
         macros[f'Base{domain}Fone'] = f"{100 * baseline.loc[s, 'macro_f1']:.2f}"
     macros['Conclusion'] = interpretation['conclusion']
-    demo = pd.read_csv(root / 'seed_664' / 'predictions.csv')
-    credits = pd.read_csv(Path(__file__).resolve().parent / 'examples' / 'credits.csv')
-    for filename, suffix in [('field.jpg', 'One'), ('field_second.jpg', 'Two')]:
-        path = credits.loc[credits['use'] == filename, 'path'].iloc[0]
-        for c, prefix in [('ordinary', 'Ord'), ('strong', 'Aug')]:
-            pred = demo[(demo.path == path) & (demo.condition == c)].y_pred.iloc[0]
-            macros[f'Demo{prefix}{suffix}'] = NAMES[int(pred)].lower()
     write(dest / 'numbers.tex', ['\\newcommand{\\' + k + '}{' + v + '}' for k, v in macros.items()])
 
 
